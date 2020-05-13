@@ -7,6 +7,23 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:75.0) Gecko/20100101 Firefox/75.0',
 }
 
+keywords = [
+    "kaspersky",
+    "kaspersky-lab",
+    "@kaspersky.com",
+    "@kaspersky",
+    "MyKaspersky",
+    "avp.ru",
+    "hqproxyusr.avp.ru",
+    "hqproxyusr",
+    "proxyusr.avp.ru",
+    "KLDFS",
+    "KLSRL",
+    "KLBox",
+    "KL Box",
+    "safekids"
+]
+
 
 class LinkParser(HTMLParser):
     def __init__(self):
@@ -20,10 +37,13 @@ class LinkParser(HTMLParser):
                     self.links.append(attr[1])
 
 
-def matches(keyword, content):
-    word = keyword.replace('"', '')
-    match = re.findall(r'%s' % word, content, flags=re.IGNORECASE)
-    return len(match)
+def matches(content):
+    found = []
+    for keyword in keywords:
+        word = keyword.replace('"', '')
+        match = re.findall(r'%s' % word, content, flags=re.IGNORECASE)
+        found.append({"keyword": word, "matches": len(match)})
+    return found
 
 
 def get_paste_raw(paste_id):
@@ -37,8 +57,10 @@ def get_pub_pastes():
     lp.feed(r.text)
     for link in lp.links:
         if len(link) == 9:
-            print("Paste:", "https://pastebin.com" + link,
-                  "\tMatches:", matches("kaspersky", get_paste_raw(link)))
+            print("\nPaste:", "https://pastebin.com" + link)
+            print("Matches:")
+            for match in matches(get_paste_raw(link)):
+                print("\t", match["keyword"], match["matches"])
             time.sleep(3)
 
 
