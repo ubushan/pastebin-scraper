@@ -1,13 +1,18 @@
 import requests
 from html.parser import HTMLParser
 import time
+import random
 import re
 
+session = requests.Session()
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:75.0) Gecko/20100101 Firefox/75.0',
 }
 
 keywords = [
+    "pozZnakow",
+    "8c7efc37-cd7c-4262-976e-39585f8527bf",
+    "1f7ac0bb-ad45-4246-9817-59bdf7f7ab39",
     "kaspersky",
     "kaspersky-lab",
     "@kaspersky.com",
@@ -39,29 +44,32 @@ class LinkParser(HTMLParser):
 
 def matches(content):
     found = []
+    total = 0
     for keyword in keywords:
         word = keyword.replace('"', '')
         match = re.findall(r'%s' % word, content, flags=re.IGNORECASE)
+        total += len(match)
         found.append({"keyword": word, "matches": len(match)})
-    return found
+    count = {"total": total}
+    return found, count
 
 
 def get_paste_raw(paste_id):
-    r = requests.get("https://pastebin.com/raw" + paste_id, headers=headers)
+    r = session.get("https://pastebin.com/raw" + paste_id, headers=headers)
     return r.text
 
 
 def get_pub_pastes():
-    r = requests.get("https://pastebin.com/archive", headers=headers)
+    r = session.get("https://pastebin.com/archive", headers=headers)
     lp = LinkParser()
     lp.feed(r.text)
     for link in lp.links:
         if len(link) == 9:
-            print("\nPaste:", "https://pastebin.com" + link)
-            print("Matches:")
-            for match in matches(get_paste_raw(link)):
-                print("\t", match["keyword"], match["matches"])
-            time.sleep(3)
+            print("Paste:", "https://pastebin.com" + link)
+            # if matches(get_paste_raw(link))[1]["total"] > 0:
+            #     for match in matches(get_paste_raw(link))[0]:
+            #         print("\t", match["keyword"], match["matches"])
+            #     time.sleep(random.uniform(.6, 3))
 
 
 if __name__ == "__main__":
