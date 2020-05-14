@@ -10,9 +10,6 @@ headers = {
 }
 
 keywords = [
-    "pozZnakow",
-    "8c7efc37-cd7c-4262-976e-39585f8527bf",
-    "1f7ac0bb-ad45-4246-9817-59bdf7f7ab39",
     "kaspersky",
     "kaspersky-lab",
     "@kaspersky.com",
