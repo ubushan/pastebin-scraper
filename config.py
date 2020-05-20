@@ -1,4 +1,4 @@
-token = '1076276569:AAFNCT7HkL2rPm3uwM6mX_XyP4mB1KAVPoY'
+token = ''
 url = 'https://telegg.ru/orig/bot'
-chat_id = '6581704'
+chat_id = ''
 parse_mode = 'Markdown'
