@@ -1,2 +1,6 @@
 .idea
-bs_pb.py
+/old
+dump_scraper.py
+config.py
+pastes.db
+keywords_test.txt
